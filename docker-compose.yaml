@@ -1,0 +1,37 @@
+﻿version: "3.9"
+services:
+  postgres:
+    container_name: hotel-booking-db
+    image: postgres
+    environment:
+      POSTGRES_DB: "hotel-booking"
+      POSTGRES_PASSWORD: "qwerty123"
+      PGDATA: "/var/lib/postgresql/pgdata"
+    volumes:
+      - hotel-booking:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - hotel-booking
+    ports:
+      - "5432:5432"
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "s@ya.ru"
+      PGADMIN_DEFAULT_PASSWORD: "qwerty123"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    restart: unless-stopped
+    networks:
+      - hotel-booking
+    ports:
+      - "5050:80"
+
+volumes: 
+  hotel-booking:
+  pgadmin:
+    
+networks:
+  hotel-booking:
