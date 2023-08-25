@@ -30,9 +30,7 @@ class SchemaHotel(BaseModel):
 
 
 @app.get("/hotels")
-def get_hotels(
-        search_args: HotelSearchArgs = Depends()
-) -> List[SchemaHotel]:
+def get_hotels(search_args: HotelSearchArgs = Depends()) -> List[SchemaHotel]:
     hotels = [
         SchemaHotel(address="New-York city, green street, house 5", name="Great hotel", stars=4)
     ]
@@ -46,5 +44,5 @@ class SchemaBooking(BaseModel):
 
 
 @app.post("/bookings")
-def add_booking(booking: SchemaBooking):
+def add_booking(booking: SchemaBooking) -> None:
     pass
