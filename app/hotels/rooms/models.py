@@ -9,11 +9,11 @@ from app.database import Base
 class Room(Base):
     __tablename__ = "rooms"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    hotel_id: Mapped[int] = mapped_column(ForeignKey("hotels.id"), nullable=False)
-    name: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[str] = mapped_column(String, nullable=False)
-    price: Mapped[int] = mapped_column(Integer, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    hotel_id: Mapped[int] = mapped_column(ForeignKey("hotels.id"))
+    name: Mapped[str]
+    description: Mapped[str]
+    price: Mapped[int]
     services: Mapped[Optional[List[str]]] = mapped_column(JSON)
-    quantity: Mapped[int] = mapped_column(Integer, nullable=False)
-    image_id: Mapped[Optional[int]] = mapped_column(Integer)
+    quantity: Mapped[int]
+    image_id: Mapped[Optional[int]]
