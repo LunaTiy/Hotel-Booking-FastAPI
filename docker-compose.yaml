@@ -5,7 +5,7 @@ services:
     image: postgres
     environment:
       POSTGRES_DB: "hotel-booking"
-      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_PASSWORD: "qwerty123"
       PGDATA: "/var/lib/postgresql/pgdata"
     volumes:
       - hotel-booking:/var/lib/postgresql/data
