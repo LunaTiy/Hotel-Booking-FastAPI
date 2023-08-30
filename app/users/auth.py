@@ -6,6 +6,7 @@ from jose.constants import ALGORITHMS
 from passlib.context import CryptContext
 from pydantic import EmailStr
 
+from app.config import settings
 from app.users.models import User
 from app.users.repository import UserRepository
 
@@ -24,7 +25,7 @@ def create_access_token(data: Dict) -> str:
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=30)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, "some-key", ALGORITHMS.HS256)
+    encoded_jwt = jwt.encode(to_encode, settings.JWT_KEY, settings.JWT_ALGO)
     return encoded_jwt
 
 

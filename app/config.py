@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     DB_PASS: Optional[str] = None
     DB_NAME: Optional[str] = None
 
+    JWT_KEY: Optional[str] = None
+    JWT_ALGO: Optional[str] = None
+
     @property
     def database_url(self) -> str:
         driver = f'{self.DMS}+{self.DMS_DRIVER}'
