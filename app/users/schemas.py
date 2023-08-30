@@ -1,6 +1,6 @@
 ﻿from pydantic import BaseModel, EmailStr
 
 
-class SchemeUserRegister(BaseModel):
+class SchemeUserAuth(BaseModel):
     email: EmailStr
     password: str
