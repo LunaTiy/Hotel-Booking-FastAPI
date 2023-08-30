@@ -1,9 +1,12 @@
 ﻿from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from app.bookings.models import Booking
 from app.bookings.repository import BookingRepository
 from app.bookings.schemas import SchemaBooking
+from app.users.dependencies import get_current_user
+from app.users.models import User
 
 router = APIRouter(
     prefix="/bookings",
@@ -12,10 +15,5 @@ router = APIRouter(
 
 
 @router.get("")
-async def get_bookings() -> List[SchemaBooking]:
-    return await BookingRepository.find_all()
-
-
-@router.get("/{booking_id}")
-def get_booking(booking_id: int):
-    pass
+async def get_bookings(user: User = Depends(get_current_user)) -> List[SchemaBooking]:
+    return await BookingRepository.find_all(Booking.user_id == user.id)
