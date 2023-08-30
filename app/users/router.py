@@ -1,5 +1,6 @@
-﻿from fastapi import APIRouter, HTTPException, status, Response, Depends
+﻿from fastapi import APIRouter, Response, Depends
 
+from app.exceptions import UserAlreadyExistsException, IncorrectEmailOrPassword
 from app.users.auth import get_password_hash, authenticate_user, create_access_token
 from app.users.dependencies import get_current_user
 from app.users.models import User
@@ -17,7 +18,7 @@ async def register_user(user_data: SchemeUserAuth):
     existing_user = await UserRepository.find_one_or_none(User.email == user_data.email)
 
     if existing_user:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        raise UserAlreadyExistsException
 
     hashed_password = get_password_hash(user_data.password)
     await UserRepository.add(email=user_data.email, hashed_password=hashed_password)
@@ -28,7 +29,7 @@ async def login_user(response: Response, user_data: SchemeUserAuth):
     user = await authenticate_user(user_data.email, user_data.password)
 
     if not user:
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED)
+        raise IncorrectEmailOrPassword
 
     access_token = create_access_token({"sub": str(user.id)})
     response.set_cookie("booking_access_token", access_token, httponly=True)
