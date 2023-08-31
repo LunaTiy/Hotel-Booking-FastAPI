@@ -1,4 +1,5 @@
-﻿from typing import List
+﻿from datetime import date
+from typing import List
 
 from app.bookings.repository import BookingRepository
 from app.hotels.rooms.models import Room
@@ -6,7 +7,7 @@ from app.hotels.rooms.repository import RoomRepository
 from app.hotels.rooms.schemas import SchemaRoom
 
 
-async def get_rooms_by_schema(date_from, date_to, hotel_id):
+async def get_rooms_by_schema(date_from: date, date_to: date, hotel_id: int):
     rooms: List[Room] = await RoomRepository.find_all(Room.hotel_id == hotel_id)
     output_rooms: List[SchemaRoom] = []
 
