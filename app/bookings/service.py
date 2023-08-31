@@ -3,11 +3,13 @@
 from app.bookings.models import Booking
 from app.bookings.repository import BookingRepository
 from app.bookings.schemas import SchemaUserBooking
+from app.exceptions import CantRemoveBooking
 from app.hotels.rooms.models import Room
 from app.hotels.rooms.repository import RoomRepository
+from app.users.models import User
 
 
-async def get_user_bookings(user):
+async def get_user_bookings(user: User):
     bookings: List[Booking] = await BookingRepository.find_all(Booking.user_id == user.id)
     user_bookings: List[SchemaUserBooking] = []
 
@@ -30,3 +32,10 @@ async def get_user_bookings(user):
         )
 
     return user_bookings
+
+
+async def try_remove_booking(booking_id: int, user: User):
+    booking: Booking = await BookingRepository.find_one_or_none(Booking.id == booking_id, Booking.user_id == user.id)
+    if not booking:
+        raise CantRemoveBooking
+    await BookingRepository.remove(Booking.id == booking_id)

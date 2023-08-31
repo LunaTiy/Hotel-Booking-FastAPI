@@ -41,3 +41,8 @@ class UserIsNotPresent(BookingException):
 class RoomCantBeBooked(BookingException):
     status_code = status.HTTP_409_CONFLICT
     detail = "Не осталось свободных номеров"
+
+
+class CantRemoveBooking(BookingException):
+    status = status.HTTP_403_FORBIDDEN
+    detail = "Невозможно удалить данное бронирование"

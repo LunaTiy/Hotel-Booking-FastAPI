@@ -1,4 +1,5 @@
 ﻿from datetime import date
+from typing import Optional
 
 from sqlalchemy import select, func, insert
 
@@ -30,7 +31,7 @@ class BookingRepository(BaseRepository):
             return rooms_left
 
     @classmethod
-    async def add(cls, user_id: int, room_id: int, date_from: date, date_to: date):
+    async def add(cls, user_id: int, room_id: int, date_from: date, date_to: date) -> Optional[model]:
         """
         -- Заезд '2023-05-15'
         -- Выезд '2023-06-20'

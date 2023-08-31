@@ -1,20 +1,22 @@
-﻿from sqlalchemy import select, insert, update, delete
+﻿from typing import Optional, List
 
-from app.database import async_session_maker
+from sqlalchemy import select, insert, update, delete
+
+from app.database import async_session_maker, Base
 
 
 class BaseRepository:
     model = None
 
     @classmethod
-    async def add(cls, **data):
+    async def add(cls, **data) -> None:
         async with async_session_maker() as session:
             query = insert(cls.model.__table__.columns).values(**data)
             await session.execute(query)
             await session.commit()
 
     @classmethod
-    async def remove(cls, *filter_by):
+    async def remove(cls, *filter_by) -> None:
         async with async_session_maker() as session:
             query = delete(cls.model).filter(*filter_by)
             await session.execute(query)
@@ -29,14 +31,14 @@ class BaseRepository:
             return result.mappings().all()
 
     @classmethod
-    async def find_one_or_none(cls, *filter_by):
+    async def find_one_or_none(cls, *filter_by) -> Optional[model]:
         async with async_session_maker() as session:
             query = select(cls.model.__table__.columns).filter(*filter_by)
             result = await session.execute(query)
             return result.mappings().one_or_none()
 
     @classmethod
-    async def find_all(cls, *filter_by):
+    async def find_all(cls, *filter_by) -> List[model]:
         async with async_session_maker() as session:
             query = select(cls.model.__table__.columns).filter(*filter_by)
             result = await session.execute(query)
