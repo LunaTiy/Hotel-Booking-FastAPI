@@ -1,4 +1,4 @@
-﻿from sqlalchemy import select, insert
+﻿from sqlalchemy import select, insert, update, delete
 
 from app.database import async_session_maker
 
@@ -9,9 +9,24 @@ class BaseRepository:
     @classmethod
     async def add(cls, **data):
         async with async_session_maker() as session:
-            query = insert(cls.model).values(**data)
+            query = insert(cls.model.__table__.columns).values(**data)
             await session.execute(query)
             await session.commit()
+
+    @classmethod
+    async def remove(cls, *filter_by):
+        async with async_session_maker() as session:
+            query = delete(cls.model).filter(*filter_by)
+            await session.execute(query)
+            await session.commit()
+
+    @classmethod
+    async def update(cls, *filter_by, **data):
+        async with async_session_maker() as session:
+            query = update(cls.model.__table__.columns).filter(*filter_by).values(**data).returning(cls.model)
+            result = await session.execute(query)
+            await session.commit()
+            return result.mappings().all()
 
     @classmethod
     async def find_one_or_none(cls, *filter_by):

@@ -3,13 +3,31 @@
 from sqlalchemy import select, func, insert
 
 from app.bookings.models import Booking
-from app.database import engine, async_session_maker
+from app.database import async_session_maker
 from app.hotels.rooms.models import Room
 from app.repository.base import BaseRepository
 
 
 class BookingRepository(BaseRepository):
     model = Booking
+
+    @classmethod
+    async def get_available_rooms(cls, room_id: int, date_from: date, date_to: date) -> int:
+        booked_rooms = select(cls.model).where(
+            (Booking.room_id == room_id) &
+            ((Booking.date_from <= date_to) & (Booking.date_to >= date_from))
+        ).cte("booked_rooms")
+
+        get_rooms_left = select(
+            (Room.quantity - func.count(booked_rooms.columns.room_id)).label("rooms_left")
+        ).select_from(Room).join(
+            booked_rooms, booked_rooms.columns.room_id == Room.id, isouter=True
+        ).where(Room.id == room_id).group_by(Room.quantity, booked_rooms.columns.room_id)
+
+        async with async_session_maker() as session:
+            rooms_left_result = await session.execute(get_rooms_left)
+            rooms_left = rooms_left_result.mappings().one().rooms_left
+            return rooms_left
 
     @classmethod
     async def add(cls, user_id: int, room_id: int, date_from: date, date_to: date):
@@ -29,24 +47,12 @@ class BookingRepository(BaseRepository):
         WHERE rooms.id = 1
         GROUP BY rooms.quantity, booked_rooms.room_id
         """
+        rooms_left = await cls.get_available_rooms(room_id, date_from, date_to
+                                                   )
+        if rooms_left <= 0:
+            return None
+
         async with async_session_maker() as session:
-            booked_rooms = select(cls.model).where(
-                (Booking.room_id == room_id) &
-                ((Booking.date_from <= date_to) & (Booking.date_to >= date_from))
-            ).cte("booked_rooms")
-
-            get_rooms_left = select(
-                (Room.quantity - func.count(booked_rooms.columns.room_id)).label("rooms_left")
-            ).select_from(Room).join(
-                booked_rooms, booked_rooms.columns.room_id == Room.id, isouter=True
-            ).where(Room.id == room_id).group_by(Room.quantity, booked_rooms.columns.room_id)
-
-            rooms_left_result = await session.execute(get_rooms_left)
-            rooms_left = rooms_left_result.mappings().one().rooms_left
-
-            if rooms_left <= 0:
-                return None
-
             get_price = select(Room.price).filter(Room.id == room_id)
             price = await session.execute(get_price)
 
