@@ -6,12 +6,12 @@ from app.hotels.models import Hotel
 from app.hotels.repsitory import HotelRepository
 from app.hotels.rooms.models import Room
 from app.hotels.rooms.repository import RoomRepository
-from app.hotels.schemas import AvailableHotel
+from app.hotels.schemas import SchemaAvailableHotel
 
 
-async def get_available_hotels(location: str, date_from: date, date_to: date) -> List[AvailableHotel]:
+async def get_available_hotels(location: str, date_from: date, date_to: date) -> List[SchemaAvailableHotel]:
     hotels: List[Hotel] = await HotelRepository.find_all(Hotel.location.contains(location))
-    available_hotels: List[AvailableHotel] = []
+    available_hotels: List[SchemaAvailableHotel] = []
 
     for hotel in hotels:
         rooms: List[Room] = await RoomRepository.find_all(Room.hotel_id == hotel.id)
@@ -24,7 +24,7 @@ async def get_available_hotels(location: str, date_from: date, date_to: date) ->
         if common_rooms_left < 1:
             continue
 
-        available_hotel = AvailableHotel(
+        available_hotel = SchemaAvailableHotel(
             id=hotel.id,
             name=hotel.name,
             location=hotel.location,
