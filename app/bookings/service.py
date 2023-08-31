@@ -2,19 +2,19 @@
 
 from app.bookings.models import Booking
 from app.bookings.repository import BookingRepository
-from app.bookings.schemas import SchemaBooking
+from app.bookings.schemas import SchemaUserBooking
 from app.hotels.rooms.models import Room
 from app.hotels.rooms.repository import RoomRepository
 
 
 async def get_user_bookings(user):
     bookings: List[Booking] = await BookingRepository.find_all(Booking.user_id == user.id)
-    user_bookings: List[SchemaBooking] = []
+    user_bookings: List[SchemaUserBooking] = []
 
     for booking in bookings:
         room: Room = await RoomRepository.find_one_or_none(Room.id == booking.room_id)
         user_bookings.append(
-            SchemaBooking(
+            SchemaUserBooking(
                 room_id=booking.room_id,
                 user_id=user.id,
                 date_from=booking.date_from,

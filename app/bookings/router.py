@@ -4,7 +4,7 @@ from typing import List
 from fastapi import APIRouter, Depends
 
 from app.bookings.repository import BookingRepository
-from app.bookings.schemas import SchemaBooking
+from app.bookings.schemas import SchemaUserBooking, SchemaBooking
 from app.bookings.service import get_user_bookings
 from app.exceptions import RoomCantBeBooked
 from app.users.dependencies import get_current_user
@@ -17,7 +17,7 @@ router = APIRouter(
 
 
 @router.get("")
-async def get_bookings(user: User = Depends(get_current_user)) -> List[SchemaBooking]:
+async def get_bookings(user: User = Depends(get_current_user)) -> List[SchemaUserBooking]:
     return await get_user_bookings(user)
 
 
@@ -25,9 +25,8 @@ async def get_bookings(user: User = Depends(get_current_user)) -> List[SchemaBoo
 async def add_booking(
         room_id: int, date_from: date, date_to: date,
         user: User = Depends(get_current_user),
-):
+) -> SchemaBooking:
     booking = await BookingRepository.add(user.id, room_id, date_from, date_to)
     if not booking:
         raise RoomCantBeBooked
-
     return booking
