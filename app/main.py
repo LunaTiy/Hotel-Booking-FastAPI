@@ -40,14 +40,3 @@ def get_hotels(search_args: HotelSearchArgs = Depends()) -> List[SchemaHotel]:
         SchemaHotel(address="New-York city, green street, house 5", name="Great hotel", stars=4)
     ]
     return hotels
-
-
-class SchemaBooking(BaseModel):
-    room_id: int
-    date_from: date
-    date_to: date
-
-
-@app.post("/bookings")
-def add_booking(booking: SchemaBooking) -> None:
-    pass
