@@ -7,7 +7,7 @@ from app.hotels.rooms.repository import RoomRepository
 from app.hotels.rooms.schemas import SchemaRoom
 
 
-async def get_rooms_by_schema(date_from: date, date_to: date, hotel_id: int):
+async def get_rooms_with_cost_and_left(date_from: date, date_to: date, hotel_id: int) -> List[SchemaRoom]:
     rooms: List[Room] = await RoomRepository.find_all(Room.hotel_id == hotel_id)
     output_rooms: List[SchemaRoom] = []
 

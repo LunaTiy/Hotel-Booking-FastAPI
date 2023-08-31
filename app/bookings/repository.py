@@ -27,7 +27,7 @@ class BookingRepository(BaseRepository):
 
         async with async_session_maker() as session:
             rooms_left_result = await session.execute(get_rooms_left)
-            rooms_left = rooms_left_result.mappings().one().rooms_left
+            rooms_left: int = rooms_left_result.mappings().one().rooms_left
             return rooms_left
 
     @classmethod
@@ -59,7 +59,7 @@ class BookingRepository(BaseRepository):
 
             current_price: int = price.mappings().one().price
 
-            add_booking = insert(cls.model).values(
+            add_booking = insert(cls.model.__table__.columns).values(
                 room_id=room_id,
                 user_id=user_id,
                 date_from=date_from,

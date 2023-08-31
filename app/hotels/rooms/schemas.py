@@ -11,6 +11,6 @@ class SchemaRoom(BaseModel):
     price: int
     services: Optional[List[str]]
     quantity: int
-    image_id: int
+    image_id: Optional[int]
     total_cost: int
     rooms_left: int

@@ -2,7 +2,7 @@
 
 from sqlalchemy import select, insert, update, delete
 
-from app.database import async_session_maker, Base
+from app.database import async_session_maker
 
 
 class BaseRepository:

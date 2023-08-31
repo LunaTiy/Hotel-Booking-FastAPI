@@ -9,7 +9,7 @@ from app.hotels.rooms.repository import RoomRepository
 from app.users.models import User
 
 
-async def get_user_bookings(user: User):
+async def get_user_bookings(user: User) -> List[SchemaUserBooking]:
     bookings: List[Booking] = await BookingRepository.find_all(Booking.user_id == user.id)
     user_bookings: List[SchemaUserBooking] = []
 
@@ -34,7 +34,7 @@ async def get_user_bookings(user: User):
     return user_bookings
 
 
-async def try_remove_booking(booking_id: int, user: User):
+async def try_remove_booking(booking_id: int, user: User) -> None:
     booking: Booking = await BookingRepository.find_one_or_none(Booking.id == booking_id, Booking.user_id == user.id)
     if not booking:
         raise CantRemoveBooking

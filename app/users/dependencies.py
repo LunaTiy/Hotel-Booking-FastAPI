@@ -9,14 +9,14 @@ from app.users.models import User
 from app.users.repository import UserRepository
 
 
-def get_token(request: Request):
-    token = request.cookies.get("booking_access_token")
+def get_token(request: Request) -> str:
+    token: str = request.cookies.get("booking_access_token")
     if not token:
         raise TokenAbsentException
     return token
 
 
-async def get_current_user(token: str = Depends(get_token)):
+async def get_current_user(token: str = Depends(get_token)) -> User:
     try:
         payload = jwt.decode(token, settings.JWT_KEY, settings.JWT_ALGO)
     except JWTError:
