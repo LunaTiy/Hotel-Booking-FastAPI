@@ -12,7 +12,7 @@ class BookingRepository(BaseRepository):
     model = Booking
 
     @classmethod
-    async def get_available_rooms(cls, room_id: int, date_from: date, date_to: date) -> int:
+    async def get_count_available_rooms(cls, room_id: int, date_from: date, date_to: date) -> int:
         booked_rooms = select(cls.model).where(
             (Booking.room_id == room_id) &
             ((Booking.date_from <= date_to) & (Booking.date_to >= date_from))
@@ -47,8 +47,8 @@ class BookingRepository(BaseRepository):
         WHERE rooms.id = 1
         GROUP BY rooms.quantity, booked_rooms.room_id
         """
-        rooms_left = await cls.get_available_rooms(room_id, date_from, date_to
-                                                   )
+        rooms_left = await cls.get_count_available_rooms(room_id, date_from, date_to
+                                                         )
         if rooms_left <= 0:
             return None
 

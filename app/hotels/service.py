@@ -18,7 +18,7 @@ async def get_available_hotels(location: str, date_from: date, date_to: date) ->
         common_rooms_left = 0
 
         for room in rooms:
-            rooms_left = await BookingRepository.get_available_rooms(room.id, date_from, date_to)
+            rooms_left = await BookingRepository.get_count_available_rooms(room.id, date_from, date_to)
             common_rooms_left += rooms_left
 
         if common_rooms_left < 1:
