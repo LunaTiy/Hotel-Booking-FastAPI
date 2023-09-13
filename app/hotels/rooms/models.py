@@ -1,6 +1,6 @@
 ﻿from typing import Optional, List
 
-from sqlalchemy import Integer, ForeignKey, String, JSON
+from sqlalchemy import ForeignKey, JSON
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import Base
