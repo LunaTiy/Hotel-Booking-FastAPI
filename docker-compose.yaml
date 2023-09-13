@@ -1,6 +1,6 @@
 ﻿version: "3.9"
 services:
-  postgres:
+  db:
     container_name: hotel-booking-db
     image: postgres
     environment:
