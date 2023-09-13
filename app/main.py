@@ -16,6 +16,7 @@ app.include_router(users_router)
 app.include_router(hotels_router)
 app.include_router(rooms_router)
 app.include_router(bookings_router)
+
 app.include_router(pages_router)
 
 
