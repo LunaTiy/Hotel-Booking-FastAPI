@@ -59,13 +59,13 @@ class BookingRepository(BaseRepository):
 
             current_price: int = price.mappings().one().price
 
-            add_booking = insert(cls.model.__table__.columns).values(
+            add_booking = insert(cls.model).values(
                 room_id=room_id,
                 user_id=user_id,
                 date_from=date_from,
                 date_to=date_to,
                 price=current_price,
-            ).returning(Booking)
+            ).returning(Booking.__table__.columns)
 
             new_booking = await session.execute(add_booking)
             await session.commit()
