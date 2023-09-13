@@ -5,6 +5,11 @@
     <title>Набронировал</title>
 </head>
 <body>
-Хеллоу ворлд
+<div>
+    {% for hotel in hotels %}
+        <h1>{{ hotel.name }}</h1>
+        <h4>{{ hotel.location }}</h4>
+    {% endfor %}
+</div>
 </body>
 </html>
