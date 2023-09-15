@@ -12,11 +12,5 @@ class SchemaHotel(BaseModel):
     image_id: Optional[int]
 
 
-class SchemaAvailableHotel(BaseModel):
-    id: int
-    name: str
-    location: str
-    services: Optional[List[str]]
-    rooms_quantity: int
-    image_id: Optional[int]
+class SchemaAvailableHotel(SchemaHotel):
     rooms_left: int
