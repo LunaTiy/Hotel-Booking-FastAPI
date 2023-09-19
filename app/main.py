@@ -1,4 +1,6 @@
-﻿from fastapi import FastAPI
+﻿from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
@@ -12,7 +14,19 @@ from app.images.router import router as images_router
 from app.pages.router import router as pages_router
 from app.users.router import router as users_router
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(application: FastAPI): # noqa
+    # On startup
+    redis = aioredis.from_url("redis://localhost:6379", encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="my-cache")
+
+    yield
+
+    # On shutdown
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory="app/static"), "static")
 
@@ -36,9 +50,3 @@ app.add_middleware(
     allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
                    "Authorization"]
 )
-
-
-@app.on_event("startup")
-def startup():
-    redis = aioredis.from_url("redis://localhost:6379", encoding="utf8", decode_responses=True)
-    FastAPICache.init(RedisBackend(redis), prefix="my-cache")
