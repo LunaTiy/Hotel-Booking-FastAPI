@@ -8,6 +8,7 @@ from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 
 from app.bookings.router import router as bookings_router
+from app.config import settings
 from app.hotels.rooms.router import router as rooms_router
 from app.hotels.router import router as hotels_router
 from app.images.router import router as images_router
@@ -16,9 +17,9 @@ from app.users.router import router as users_router
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI): # noqa
+async def lifespan(application: FastAPI):  # noqa
     # On startup
-    redis = aioredis.from_url("redis://localhost:6379", encoding="utf8", decode_responses=True)
+    redis = aioredis.from_url(settings.redis_url, encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="my-cache")
 
     yield

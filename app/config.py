@@ -1,19 +1,20 @@
-﻿from typing import Optional
-
-from pydantic_settings import BaseSettings, SettingsConfigDict
+﻿from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    DMS: Optional[str] = None
-    DMS_DRIVER: Optional[str] = None
-    DB_HOST: Optional[str] = None
-    DB_PORT: Optional[int] = None
-    DB_USER: Optional[str] = None
-    DB_PASS: Optional[str] = None
-    DB_NAME: Optional[str] = None
+    DMS: str
+    DMS_DRIVER: str
+    DB_HOST: str
+    DB_PORT: int
+    DB_USER: str
+    DB_PASS: str
+    DB_NAME: str
 
-    JWT_KEY: Optional[str] = None
-    JWT_ALGO: Optional[str] = None
+    REDIS_HOST: str
+    REDIS_PORT: int
+
+    JWT_KEY: str
+    JWT_ALGO: str
 
     @property
     def database_url(self) -> str:
@@ -21,6 +22,10 @@ class Settings(BaseSettings):
         user = f"{self.DB_USER}:{self.DB_PASS}"
         database = f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         return f"{driver}://{user}@{database}"
+
+    @property
+    def redis_url(self) -> str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
 
     model_config = SettingsConfigDict(env_file=".env")
 
