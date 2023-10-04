@@ -11,7 +11,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
 
-    booking = relationship("Booking", back_populates="user")
+    bookings: Mapped[list["Booking"]] = relationship("Booking", back_populates="user")
 
     def __str__(self):
-        return f"User: {self.email}"
+        return f"Пользователь {self.email}"
