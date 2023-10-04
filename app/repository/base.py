@@ -1,5 +1,4 @@
-﻿from typing import Optional, List
-
+﻿
 from sqlalchemy import select, insert, update, delete
 
 from app.database import async_session_maker
@@ -31,14 +30,14 @@ class BaseRepository:
             return result.mappings().all()
 
     @classmethod
-    async def find_one_or_none(cls, *filter_by) -> Optional[model]:
+    async def find_one_or_none(cls, *filter_by) -> model | None:
         async with async_session_maker() as session:
             query = select(cls.model.__table__.columns).filter(*filter_by)
             result = await session.execute(query)
             return result.mappings().one_or_none()
 
     @classmethod
-    async def find_all(cls, *filter_by) -> List[model]:
+    async def find_all(cls, *filter_by) -> list[model]:
         async with async_session_maker() as session:
             query = select(cls.model.__table__.columns).filter(*filter_by)
             result = await session.execute(query)

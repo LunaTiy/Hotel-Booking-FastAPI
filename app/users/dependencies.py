@@ -20,7 +20,7 @@ async def get_current_user(token: str = Depends(get_token)) -> User:
     try:
         payload = jwt.decode(token, settings.JWT_KEY, settings.JWT_ALGO)
     except JWTError:
-        raise IncorrectTokenFormatException
+        raise IncorrectTokenFormatException from None
 
     expire: str = payload.get("exp")
 

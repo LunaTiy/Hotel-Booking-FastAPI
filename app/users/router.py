@@ -1,4 +1,6 @@
-﻿from fastapi import APIRouter, Response, Depends
+﻿from typing import Annotated
+
+from fastapi import APIRouter, Response, Depends
 
 from app.exceptions import UserAlreadyExistsException, IncorrectEmailOrPassword
 from app.users.auth import get_password_hash, authenticate_user, create_access_token
@@ -41,6 +43,7 @@ async def logout_user(response: Response) -> None:
 
 
 @router.get("/me")
-async def read_user_me(current_user: User = Depends(get_current_user)) -> SchemeUserInfo:
-    user_info = SchemeUserInfo(id=current_user.id, email=current_user.email)
-    return user_info
+async def read_user_me(
+        current_user: Annotated[User, Depends(get_current_user)]
+) -> SchemeUserInfo:
+    return SchemeUserInfo(id=current_user.id, email=current_user.email)

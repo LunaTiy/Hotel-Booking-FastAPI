@@ -1,6 +1,5 @@
-﻿import asyncio
-from datetime import date, datetime
-from typing import List, Optional
+﻿from datetime import date, datetime
+from typing import Annotated
 
 from fastapi import APIRouter, Query
 from fastapi_cache.decorator import cache
@@ -20,13 +19,12 @@ router = APIRouter(
 @cache(expire=20)
 async def get_hotels_by_location_and_time(
         location: str,
-        date_from: date = Query(description=f"Например, {datetime.now().date()}"),
-        date_to: date = Query(description=f"Например, {datetime.now().date()}")
-) -> List[SchemaAvailableHotel]:
-    hotels = await get_available_hotels(location, date_from, date_to)
-    return hotels
+        date_from: Annotated[date, Query(description=f"Например, {datetime.now().date()}")],
+        date_to: Annotated[date, Query(description=f"Например, {datetime.now().date()}")]
+) -> list[SchemaAvailableHotel]:
+    return await get_available_hotels(location, date_from, date_to)
 
 
 @router.get("/id/{hotel_id}")
-async def get_hotel_by_id(hotel_id: int) -> Optional[SchemaHotel]:
+async def get_hotel_by_id(hotel_id: int) -> SchemaHotel | None:
     return await HotelRepository.find_one_or_none(Hotel.id == hotel_id)

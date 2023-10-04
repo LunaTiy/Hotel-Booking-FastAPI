@@ -1,5 +1,5 @@
 ﻿from datetime import date, datetime
-from typing import List
+from typing import Annotated
 
 from fastapi import APIRouter, Query
 
@@ -16,7 +16,7 @@ router = APIRouter(
 @router.get("/{hotel_id}/rooms")
 async def get_rooms_by_time(
         hotel_id: int,
-        date_from: date = Query(description=f"Например, {datetime.now().date()}"),
-        date_to: date = Query(description=f"Например, {datetime.now().date()}")
-) -> List[SchemaRoom]:
+        date_from: Annotated[date, Query(description=f"Например, {datetime.now().date()}")],
+        date_to: Annotated[date, Query(description=f"Например, {datetime.now().date()}")]
+) -> list[SchemaRoom]:
     return await get_rooms_with_cost_and_left(date_from, date_to, hotel_id)

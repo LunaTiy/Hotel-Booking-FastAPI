@@ -1,5 +1,4 @@
-﻿from typing import Optional, List
-
+﻿
 from sqlalchemy import String, JSON, SmallInteger
 from sqlalchemy.orm import mapped_column, Mapped
 
@@ -12,6 +11,6 @@ class Hotel(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(128))
     location: Mapped[str] = mapped_column(String(255))
-    services: Mapped[Optional[List[str]]] = mapped_column(JSON)
+    services: Mapped[list[str] | None] = mapped_column(JSON)
     rooms_quantity: Mapped[int] = mapped_column(SmallInteger)
-    image_id: Mapped[Optional[int]]
+    image_id: Mapped[int | None]

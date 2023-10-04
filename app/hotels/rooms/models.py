@@ -1,5 +1,4 @@
-﻿from typing import Optional, List
-
+﻿
 from sqlalchemy import ForeignKey, JSON
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -14,6 +13,6 @@ class Room(Base):
     name: Mapped[str]
     description: Mapped[str]
     price: Mapped[int]
-    services: Mapped[Optional[List[str]]] = mapped_column(JSON)
+    services: Mapped[list[str] | None] = mapped_column(JSON)
     quantity: Mapped[int]
-    image_id: Mapped[Optional[int]]
+    image_id: Mapped[int | None]

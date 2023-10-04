@@ -1,5 +1,4 @@
 ﻿from datetime import date
-from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -23,7 +22,7 @@ class SchemaUserBooking(BaseModel):
     price: int
     total_cost: int
     total_days: int
-    image_id: Optional[int]
+    image_id: int | None
     name: str
-    description: Optional[str]
-    services: Optional[List[str]]
+    description: str | None
+    services: list[str] | None

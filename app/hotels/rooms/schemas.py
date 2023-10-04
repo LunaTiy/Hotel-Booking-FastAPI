@@ -1,5 +1,4 @@
-﻿from typing import Optional, List
-
+﻿
 from pydantic import BaseModel
 
 
@@ -7,10 +6,10 @@ class SchemaRoom(BaseModel):
     id: int
     hotel_id: int
     name: str
-    description: Optional[str]
+    description: str | None
     price: int
-    services: Optional[List[str]]
+    services: list[str] | None
     quantity: int
-    image_id: Optional[int]
+    image_id: int | None
     total_cost: int
     rooms_left: int

@@ -1,5 +1,4 @@
 ﻿from datetime import date
-from typing import List
 
 from app.bookings.repository import BookingRepository
 from app.hotels.models import Hotel
@@ -9,12 +8,12 @@ from app.hotels.rooms.repository import RoomRepository
 from app.hotels.schemas import SchemaAvailableHotel
 
 
-async def get_available_hotels(location: str, date_from: date, date_to: date) -> List[SchemaAvailableHotel]:
-    hotels: List[Hotel] = await HotelRepository.find_all(Hotel.location.contains(location))
-    available_hotels: List[SchemaAvailableHotel] = []
+async def get_available_hotels(location: str, date_from: date, date_to: date) -> list[SchemaAvailableHotel]:
+    hotels: list[Hotel] = await HotelRepository.find_all(Hotel.location.contains(location))
+    available_hotels: list[SchemaAvailableHotel] = []
 
     for hotel in hotels:
-        rooms: List[Room] = await RoomRepository.find_all(Room.hotel_id == hotel.id)
+        rooms: list[Room] = await RoomRepository.find_all(Room.hotel_id == hotel.id)
         common_rooms_left = 0
 
         for room in rooms:

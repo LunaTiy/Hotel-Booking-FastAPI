@@ -1,5 +1,5 @@
 ﻿from datetime import datetime, timedelta
-from typing import Dict, Optional, Any
+from typing import Any
 
 from jose import jwt
 from passlib.context import CryptContext
@@ -20,7 +20,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(data: Dict[str, Any]) -> str:
+def create_access_token(data: dict[str, Any]) -> str:
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=30)
     to_encode.update({"exp": expire})
@@ -28,7 +28,7 @@ def create_access_token(data: Dict[str, Any]) -> str:
     return encoded_jwt
 
 
-async def authenticate_user(email: EmailStr, password: str) -> Optional[User]:
+async def authenticate_user(email: EmailStr, password: str) -> User | None:
     user: User = await UserRepository.find_one_or_none(User.email == email)
 
     if user and verify_password(password, user.hashed_password):

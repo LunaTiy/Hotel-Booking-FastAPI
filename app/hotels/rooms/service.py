@@ -1,5 +1,4 @@
 ﻿from datetime import date
-from typing import List
 
 from app.bookings.repository import BookingRepository
 from app.hotels.rooms.models import Room
@@ -7,9 +6,9 @@ from app.hotels.rooms.repository import RoomRepository
 from app.hotels.rooms.schemas import SchemaRoom
 
 
-async def get_rooms_with_cost_and_left(date_from: date, date_to: date, hotel_id: int) -> List[SchemaRoom]:
-    rooms: List[Room] = await RoomRepository.find_all(Room.hotel_id == hotel_id)
-    output_rooms: List[SchemaRoom] = []
+async def get_rooms_with_cost_and_left(date_from: date, date_to: date, hotel_id: int) -> list[SchemaRoom]:
+    rooms: list[Room] = await RoomRepository.find_all(Room.hotel_id == hotel_id)
+    output_rooms: list[SchemaRoom] = []
 
     for room in rooms:
         rooms_left = await BookingRepository.get_count_available_rooms(room.id, date_from, date_to)

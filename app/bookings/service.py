@@ -1,5 +1,4 @@
-﻿from typing import List
-
+﻿
 from app.bookings.models import Booking
 from app.bookings.repository import BookingRepository
 from app.bookings.schemas import SchemaUserBooking
@@ -9,9 +8,9 @@ from app.hotels.rooms.repository import RoomRepository
 from app.users.models import User
 
 
-async def get_user_bookings(user: User) -> List[SchemaUserBooking]:
-    bookings: List[Booking] = await BookingRepository.find_all(Booking.user_id == user.id)
-    user_bookings: List[SchemaUserBooking] = []
+async def get_user_bookings(user: User) -> list[SchemaUserBooking]:
+    bookings: list[Booking] = await BookingRepository.find_all(Booking.user_id == user.id)
+    user_bookings: list[SchemaUserBooking] = []
 
     for booking in bookings:
         room: Room = await RoomRepository.find_one_or_none(Room.id == booking.room_id)

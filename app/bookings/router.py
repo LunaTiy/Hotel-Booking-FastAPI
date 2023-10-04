@@ -1,5 +1,5 @@
 ﻿from datetime import date
-from typing import List
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Response, status
 
@@ -18,14 +18,16 @@ router = APIRouter(
 
 
 @router.get("")
-async def get_bookings(user: User = Depends(get_current_user)) -> List[SchemaUserBooking]:
+async def get_bookings(
+        user: Annotated[User, Depends(get_current_user)]
+) -> list[SchemaUserBooking]:
     return await get_user_bookings(user)
 
 
 @router.post("/add")
 async def add_booking(
         room_id: int, date_from: date, date_to: date,
-        user: User = Depends(get_current_user),
+        user: Annotated[User, Depends(get_current_user)]
 ) -> SchemaBooking:
     booking = await BookingRepository.add(user.id, room_id, date_from, date_to)
     booking_dict = SchemaBooking.model_validate(booking).model_dump()
@@ -39,6 +41,10 @@ async def add_booking(
 
 
 @router.delete("/{booking_id}")
-async def delete_booking(booking_id: int, response: Response, user: User = Depends(get_current_user)) -> None:
+async def delete_booking(
+        booking_id: int,
+        response: Response,
+        user: Annotated[User, Depends(get_current_user)]
+) -> None:
     await try_remove_booking(booking_id, user)
     response.status_code = status.HTTP_204_NO_CONTENT
