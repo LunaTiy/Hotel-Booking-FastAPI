@@ -28,7 +28,6 @@ def send_booking_confirmation_email(
         booking: dict,
         email_to: EmailStr
 ):
-    email_to = "savushkin-daniil-99@yandex.ru"  # mock
     msg_content = create_booking_confirmation_template(booking, email_to)
 
     with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT) as server:
