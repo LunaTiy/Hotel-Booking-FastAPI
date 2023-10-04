@@ -6,9 +6,12 @@ from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
+from sqladmin import Admin
 
+from app.admin.views import UserAdmin, BookingAdmin
 from app.bookings.router import router as bookings_router
 from app.config import settings
+from app.database import engine
 from app.hotels.rooms.router import router as rooms_router
 from app.hotels.router import router as hotels_router
 from app.images.router import router as images_router
@@ -51,3 +54,8 @@ app.add_middleware(
     allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
                    "Authorization"]
 )
+
+admin = Admin(app, engine)
+
+admin.add_view(UserAdmin)
+admin.add_view(BookingAdmin)
