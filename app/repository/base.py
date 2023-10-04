@@ -1,10 +1,12 @@
-﻿from sqlalchemy import select, insert, update, delete
+﻿from typing import Any
+
+from sqlalchemy import select, insert, update, delete
 
 from app.database import async_session_maker
 
 
 class BaseRepository:
-    model = None
+    model: Any | None = None
 
     @classmethod
     async def add(cls, **data) -> None:
@@ -21,15 +23,16 @@ class BaseRepository:
             await session.commit()
 
     @classmethod
-    async def update(cls, *filter_by, **data):
+    async def update(cls, *filter_by, **data) -> list[model]:
         async with async_session_maker() as session:
-            query = update(cls.model.__table__.columns).filter(*filter_by).values(**data).returning(cls.model)
+            query = update(cls.model).filter(*filter_by).values(**data).returning(
+                cls.model.__table__.columns)
             result = await session.execute(query)
             await session.commit()
             return result.mappings().all()
 
     @classmethod
-    async def find_one_or_none(cls, *filter_by) -> model | None:
+    async def find_one_or_none(cls, *filter_by) -> model:
         async with async_session_maker() as session:
             query = select(cls.model.__table__.columns).filter(*filter_by)
             result = await session.execute(query)
