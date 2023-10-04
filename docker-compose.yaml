@@ -29,9 +29,9 @@ services:
     ports:
       - "5050:80"
 
-volumes: 
+volumes:
   hotel-booking:
   pgadmin:
-    
+
 networks:
   hotel-booking:

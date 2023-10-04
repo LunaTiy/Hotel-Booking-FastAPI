@@ -1,5 +1,4 @@
-﻿
-from app.bookings.models import Booking
+﻿from app.bookings.models import Booking
 from app.bookings.repository import BookingRepository
 from app.bookings.schemas import SchemaUserBooking
 from app.exceptions import CantRemoveBooking

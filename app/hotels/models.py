@@ -1,5 +1,4 @@
-﻿
-from sqlalchemy import String, JSON, SmallInteger
+﻿from sqlalchemy import String, JSON, SmallInteger
 from sqlalchemy.orm import mapped_column, Mapped
 
 from app.database import Base
