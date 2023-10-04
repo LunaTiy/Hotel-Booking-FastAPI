@@ -1,0 +1,49 @@
+﻿target-version = "py311"
+line-length = 120
+
+select = [
+    "A",
+    "B",
+    "E",
+    "F",
+    "ISC",
+    "UP",
+    "RUF",
+    "RET",
+    "RET502"
+]
+
+ignore = [
+    "RUF001", # Кириллические символы в string
+    "RUF002", # Кириллические символы в dockstring
+    "RUF003", # Кириллические символы в комментарии
+    "A003", # Использование ключевых слов, которые перекрывают встроенные функции Python
+]
+
+fixable = ["ALL"]
+unfixable = []
+
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "migrations"
+]
