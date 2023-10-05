@@ -34,7 +34,7 @@ class IncorrectTokenFormatException(BookingException):
     detail = "Неверный формат токена"
 
 
-class UserIsNotPresent(BookingException):
+class UserIsNotPresentException(BookingException):
     status_code = status.HTTP_401_UNAUTHORIZED
 
 
