@@ -1,0 +1,9 @@
+﻿.pdm-build/
+.pdm-python
+.venv/
+.env*
+
+.git/
+.gitignore
+
+helpers/

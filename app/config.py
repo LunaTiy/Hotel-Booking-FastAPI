@@ -3,13 +3,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    DMS: str
-    DMS_DRIVER: str
     DB_HOST: str
     DB_PORT: int
-    DB_USER: str
-    DB_PASS: str
-    DB_NAME: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
 
     SMTP_HOST: str
     SMTP_PORT: int
@@ -26,9 +24,9 @@ class Settings(BaseSettings):
 
     @property
     def database_url(self) -> PostgresDsn:
-        driver = f"{self.DMS}+{self.DMS_DRIVER}"
-        user = f"{self.DB_USER}:{self.DB_PASS}"
-        database = f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        driver = "postgresql+asyncpg"
+        user = f"{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+        database = f"{self.DB_HOST}:{self.DB_PORT}/{self.POSTGRES_DB}"
         return f"{driver}://{user}@{database}"
 
     @property

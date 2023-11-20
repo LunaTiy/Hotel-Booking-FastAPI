@@ -1,37 +1,53 @@
 ﻿version: "3.9"
 services:
+
   db:
     container_name: hotel-booking-db
-    image: postgres
-    environment:
-      POSTGRES_DB: "hotel-booking"
-      POSTGRES_PASSWORD: "qwerty123"
-      PGDATA: "/var/lib/postgresql/pgdata"
+    image: postgres:latest
+    env_file:
+      - .env.prod
     volumes:
-      - hotel-booking:/var/lib/postgresql/data
+      - hotel-booking-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     restart: unless-stopped
+    ports:
+      - "5435:5432"
     networks:
       - hotel-booking
-    ports:
-      - "5432:5432"
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "s@ya.ru"
-      PGADMIN_DEFAULT_PASSWORD: "qwerty123"
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-    volumes:
-      - pgadmin:/var/lib/pgadmin
+
+  redis:
+    container_name: hotel-booking-cache
+    image: redis:latest
     restart: unless-stopped
+    ports:
+      - "6378:6379"
     networks:
       - hotel-booking
+
+  service:
+    container_name: hotel-booking-service
+    image: hotel-booking-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file:
+      - .env.prod
     ports:
-      - "5050:80"
+      - "8000:8000"
+    networks:
+      - hotel-booking
 
 volumes:
-  hotel-booking:
-  pgadmin:
+  hotel-booking-db:
 
 networks:
   hotel-booking:
