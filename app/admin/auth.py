@@ -2,6 +2,7 @@
 from sqladmin.authentication import AuthenticationBackend
 from starlette.responses import RedirectResponse
 
+from app.config import settings
 from app.users.auth import authenticate_user, create_access_token
 from app.users.dependencies import get_current_user
 
@@ -9,7 +10,6 @@ from app.users.dependencies import get_current_user
 class AdminAuth(AuthenticationBackend):
     async def login(self, request: Request) -> bool:
         form = await request.form()
-        print(form)
         email, password = form["username"], form["password"]
 
         user = await authenticate_user(email, password)
@@ -38,4 +38,4 @@ class AdminAuth(AuthenticationBackend):
         return True
 
 
-authentication_backend = AdminAuth(secret_key="...")
+authentication_backend = AdminAuth(secret_key=settings.ADMIN_SECRET_KEY)

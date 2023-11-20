@@ -1,6 +1,6 @@
 ﻿from typing import Any
 
-from sqlalchemy import select, insert, update, delete
+from sqlalchemy import delete, insert, select, update
 
 from app.database import async_session_maker
 

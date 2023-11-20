@@ -1,4 +1,5 @@
-﻿from pydantic_settings import BaseSettings, SettingsConfigDict
+﻿from pydantic import PostgresDsn, RedisDsn
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -21,15 +22,17 @@ class Settings(BaseSettings):
     JWT_KEY: str
     JWT_ALGO: str
 
+    ADMIN_SECRET_KEY: str
+
     @property
-    def database_url(self) -> str:
-        driver = f'{self.DMS}+{self.DMS_DRIVER}'
+    def database_url(self) -> PostgresDsn:
+        driver = f"{self.DMS}+{self.DMS_DRIVER}"
         user = f"{self.DB_USER}:{self.DB_PASS}"
         database = f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         return f"{driver}://{user}@{database}"
 
     @property
-    def redis_url(self) -> str:
+    def redis_url(self) -> RedisDsn:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
 
     model_config = SettingsConfigDict(env_file=".env")

@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Response, status
 
 from app.bookings.repository import BookingRepository
-from app.bookings.schemas import SchemaUserBooking, SchemaBooking
+from app.bookings.schemas import SchemaBooking, SchemaUserBooking
 from app.bookings.service import get_user_bookings, try_remove_booking
 from app.exceptions import RoomCantBeBooked
 from app.tasks.tasks import send_booking_confirmation_email

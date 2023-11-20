@@ -12,7 +12,7 @@ from app.tasks.email_templates import create_booking_confirmation_template
 @celery.task
 def process_picture(
         path: str,
-):
+) -> None:
     image_path = Path(path)
     image = Image.open(image_path)
 
@@ -27,7 +27,7 @@ def process_picture(
 def send_booking_confirmation_email(
         booking: dict,
         email_to: EmailStr
-):
+) -> None:
     msg_content = create_booking_confirmation_template(booking, email_to)
 
     with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT) as server:

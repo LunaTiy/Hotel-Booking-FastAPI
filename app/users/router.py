@@ -1,9 +1,9 @@
 ﻿from typing import Annotated
 
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Depends, Response
 
-from app.exceptions import UserAlreadyExistsException, IncorrectEmailOrPassword
-from app.users.auth import get_password_hash, authenticate_user, create_access_token
+from app.exceptions import IncorrectEmailOrPassword, UserAlreadyExistsException
+from app.users.auth import authenticate_user, create_access_token, get_password_hash
 from app.users.dependencies import get_current_user
 from app.users.models import User
 from app.users.repository import UserRepository

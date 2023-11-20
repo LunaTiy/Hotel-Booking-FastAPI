@@ -1,6 +1,6 @@
 ﻿from datetime import date
 
-from sqlalchemy import select, func, insert
+from sqlalchemy import func, insert, select
 
 from app.bookings.models import Booking
 from app.database import async_session_maker

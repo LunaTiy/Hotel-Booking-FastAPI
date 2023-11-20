@@ -1,4 +1,4 @@
-﻿from contextlib import asynccontextmanager
+﻿from contextlib import AbstractAsyncContextManager, asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,7 +9,7 @@ from redis import asyncio as aioredis
 from sqladmin import Admin
 
 from app.admin.auth import authentication_backend
-from app.admin.views import UserAdmin, BookingAdmin, HotelAdmin, RoomAdmin
+from app.admin.views import BookingAdmin, HotelAdmin, RoomAdmin, UserAdmin
 from app.bookings.router import router as bookings_router
 from app.config import settings
 from app.database import engine
@@ -21,7 +21,7 @@ from app.users.router import router as users_router
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI):
+async def lifespan(application: FastAPI) -> AbstractAsyncContextManager[None]:  # noqa: ARG001
     # On startup
     redis = aioredis.from_url(settings.redis_url, encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="my-cache")

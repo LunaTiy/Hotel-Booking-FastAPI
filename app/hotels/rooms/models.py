@@ -1,7 +1,13 @@
-﻿from sqlalchemy import ForeignKey, JSON
+﻿from typing import TYPE_CHECKING
+
+from sqlalchemy import JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.bookings.models import Booking
+    from app.hotels.models import Hotel
 
 
 class Room(Base):
@@ -19,5 +25,5 @@ class Room(Base):
     hotel: Mapped["Hotel"] = relationship("Hotel", back_populates="rooms")
     bookings: Mapped[list["Booking"]] = relationship("Booking", back_populates="room")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Номер #{self.id}, {self.name}"

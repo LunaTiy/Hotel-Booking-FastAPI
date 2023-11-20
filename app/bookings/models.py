@@ -1,9 +1,14 @@
 ﻿from datetime import date
+from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, Date, Computed
+from sqlalchemy import Computed, Date, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.hotels.rooms.models import Room
+    from app.users.models import User
 
 
 class Booking(Base):
@@ -21,5 +26,5 @@ class Booking(Base):
     user: Mapped["User"] = relationship("User", back_populates="bookings")
     room: Mapped["Room"] = relationship("Room", back_populates="bookings")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Бронирование #{self.id}"

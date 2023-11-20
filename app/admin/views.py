@@ -1,4 +1,6 @@
-﻿from sqladmin import ModelView
+﻿import typing
+
+from sqladmin import ModelView
 
 from app.bookings.models import Booking
 from app.hotels.models import Hotel
@@ -7,8 +9,8 @@ from app.users.models import User
 
 
 class UserAdmin(ModelView, model=User):
-    column_list = [User.id, User.email, User.bookings]
-    column_details_exclude_list = [User.hashed_password]
+    column_list: typing.ClassVar = [User.id, User.email, User.bookings]
+    column_details_exclude_list: typing.ClassVar = [User.hashed_password]
     can_delete = False
 
     name = "Пользователь"
