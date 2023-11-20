@@ -1,0 +1,37 @@
+[project]
+name = "Hotel-Booking-FastAPI"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Daniil Savushkin", email = "savushkin.d@dev-system.ru"},
+]
+dependencies = [
+    "fastapi>=0.104.1",
+    "uvicorn>=0.24.0.post1",
+    "fastapi-cache2>=0.2.1",
+    "redis>=5.0.1",
+    "sqladmin>=0.16.0",
+    "pydantic-settings>=2.1.0",
+    "python-jose>=3.3.0",
+    "passlib>=1.7.4",
+    "asyncpg>=0.29.0",
+    "itsdangerous>=2.1.2",
+    "Pillow>=10.1.0",
+    "celery>=5.3.5",
+    "flower>=2.0.1",
+    "email-validator>=2.1.0.post1",
+    "bcrypt>=4.0.1",
+]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=7.4.3",
+    "ruff>=0.1.6",
+]
