@@ -8,7 +8,7 @@ from app.hotels.rooms.models import Room
 from app.repository.base import BaseRepository
 
 
-class BookingRepository(BaseRepository):
+class BookingRepository(BaseRepository[Booking]):
     model = Booking
 
     @classmethod

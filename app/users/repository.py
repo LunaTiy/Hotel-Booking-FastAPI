@@ -2,5 +2,5 @@
 from app.users.models import User
 
 
-class UserRepository(BaseRepository):
+class UserRepository(BaseRepository[User]):
     model = User

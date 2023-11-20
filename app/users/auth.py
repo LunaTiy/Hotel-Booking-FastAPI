@@ -29,7 +29,7 @@ def create_access_token(data: dict[str, Any]) -> str:
 
 
 async def authenticate_user(email: EmailStr, password: str) -> User | None:
-    user: User = await UserRepository.find_one_or_none(User.email == email)
+    user = await UserRepository.find_one_or_none(User.email == email)
 
     if user and verify_password(password, user.hashed_password):
         return user

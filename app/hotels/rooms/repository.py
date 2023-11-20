@@ -2,5 +2,5 @@
 from app.repository.base import BaseRepository
 
 
-class RoomRepository(BaseRepository):
+class RoomRepository(BaseRepository[Room]):
     model = Room
