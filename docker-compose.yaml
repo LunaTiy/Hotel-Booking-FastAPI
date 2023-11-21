@@ -9,7 +9,7 @@ services:
     volumes:
       - hotel-booking-db:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}"]
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -22,6 +22,11 @@ services:
   redis:
     container_name: hotel-booking-cache
     image: redis:latest
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     restart: unless-stopped
     ports:
       - "6378:6379"
@@ -38,7 +43,7 @@ services:
       db:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - .env.prod
     ports:
