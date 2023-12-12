@@ -1,10 +1,8 @@
-import asyncio
 import json
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-import pytest
 import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy import insert
@@ -38,22 +36,25 @@ async def prepare_database() -> None:
         await session.commit()
 
 
-@pytest.fixture(scope="session")
-def event_loop():
-    """Create an instance of the default event loop for each test case"""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
+# @pytest.fixture(scope="session")
+# def event_loop():
+#     """
+#     Create an instance of the default event loop for each test case
+#     TODO: may be remove
+#     """
+#     loop = asyncio.get_event_loop_policy().new_event_loop()
+#     yield loop
+#     loop.close()
 
 
 @pytest_asyncio.fixture(scope="function")
-async def get_async_client():
-    async with AsyncClient(app=fastapi_app, base_url="http://test") as async_client:
-        yield async_client
+async def async_client():
+    async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
+        yield client
 
 
 @pytest_asyncio.fixture(scope="function")
-async def get_db_session():
+async def async_db_session():
     """todo: возможно не пригодится"""
     async with async_session_maker() as session:
         yield session
