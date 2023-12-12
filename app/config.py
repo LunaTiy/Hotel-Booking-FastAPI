@@ -1,58 +1,60 @@
-﻿from typing import Literal
+﻿import os
+from typing import Literal
 
 from pydantic import PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy import NullPool
 
 
 class Settings(BaseSettings):
-    MODE: Literal["DEV", "TEST", "PROD"]
+    mode: Literal["DEV", "TEST", "PROD"]
 
-    DB_HOST: str
-    DB_PORT: int
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
+    smtp_host: str
+    smtp_port: int
+    smtp_user: str
+    smtp_pass: str
 
-    TEST_DB_HOST: str
-    TEST_DB_PORT: int
-    TEST_DB_USER: str
-    TEST_DB_PASSWORD: str
-    TEST_DB_NAME: str
+    redis_host: str
+    redis_port: int
 
-    SMTP_HOST: str
-    SMTP_PORT: int
-    SMTP_USER: str
-    SMTP_PASS: str
+    secret_key: str
+    secret_algo: str
 
-    REDIS_HOST: str
-    REDIS_PORT: int
+    admin_secret_key: str
 
-    JWT_KEY: str
-    JWT_ALGO: str
-
-    ADMIN_SECRET_KEY: str
-
-    model_config = SettingsConfigDict(env_file=".env")
-
-    @property
-    def database_url(self) -> PostgresDsn:
-        user = f"{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
-        database = f"{self.DB_HOST}:{self.DB_PORT}/{self.POSTGRES_DB}"
-        return f"{self._database_driver}://{user}@{database}"
-
-    @property
-    def test_database_url(self) -> PostgresDsn:
-        user = f"{self.TEST_DB_USER}:{self.TEST_DB_PASSWORD}"
-        database = f"{self.TEST_DB_HOST}:{self.TEST_DB_PORT}/{self.TEST_DB_NAME}"
-        return f"{self._database_driver}://{user}@{database}"
+    model_config = SettingsConfigDict(
+        env_file=".env.test" if os.getenv("MODE") == "TEST" else ".env",
+        extra="ignore"
+    )
 
     @property
     def redis_url(self) -> RedisDsn:
-        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
+        return f"redis://{self.redis_host}:{self.redis_port}"
+
+
+class DbSettings(BaseSettings):
+    db_host: str
+    db_port: int
+    db_user: str
+    db_password: str
+    db_name: str
 
     @property
-    def _database_driver(self) -> str:
-        return "postgresql+asyncpg"
+    def database_url(self) -> PostgresDsn:
+        driver = "postgresql+asyncpg"
+        user = f"{self.db_user}:{self.db_password}"
+        database = f"{self.db_host}:{self.db_port}/{self.db_name}"
+        return f"{driver}://{user}@{database}"
+
+    model_config = SettingsConfigDict(
+        env_file=".env.test" if os.getenv("MODE") == "TEST" else ".env",
+        extra="ignore"
+    )
+
+    @property
+    def database_params(self) -> dict:
+        return {"poolclass": NullPool} if settings.mode == "TEST" else {}
 
 
 settings = Settings()
+db_settings = DbSettings()

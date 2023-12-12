@@ -21,14 +21,12 @@ from app.users.router import router as users_router
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI) -> AbstractAsyncContextManager[None]:  # noqa: ARG001
-    # On startup
+async def lifespan(
+        application: FastAPI  # noqa: ARG001
+) -> AbstractAsyncContextManager[None]:
     redis = aioredis.from_url(settings.redis_url, encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="my-cache")
-
     yield
-
-    # On shutdown
 
 
 app = FastAPI(lifespan=lifespan)

@@ -5,7 +5,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from app.bookings.models import Booking  # noqa: F401
-from app.config import settings
+from app.config import db_settings
 from app.database import Base
 from app.hotels.models import Hotel  # noqa: F401
 from app.hotels.rooms.models import Room  # noqa: F401
@@ -15,7 +15,7 @@ from app.users.models import User  # noqa: F401
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option("sqlalchemy.url", f"{settings.database_url}?async_fallback=True")
+config.set_main_option("sqlalchemy.url", f"{db_settings.database_url}?async_fallback=True")
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

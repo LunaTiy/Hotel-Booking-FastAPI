@@ -12,7 +12,7 @@ def create_booking_confirmation_template(
     email_message = EmailMessage()
 
     email_message["Subject"] = "Подтверждение бронирования"
-    email_message["From"] = settings.SMTP_USER
+    email_message["From"] = settings.smtp_user
     email_message["To"] = email_to
 
     email_message.set_content(

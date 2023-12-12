@@ -23,7 +23,7 @@ def get_token(request: Request) -> str:
 
 async def get_current_user(token: str = Depends(get_token)) -> User:
     try:
-        payload = jwt.decode(token, settings.JWT_KEY, settings.JWT_ALGO)
+        payload = jwt.decode(token, settings.secret_key, settings.secret_algo)
     except JWTError:
         raise IncorrectTokenFormatException from None
 
