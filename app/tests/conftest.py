@@ -6,6 +6,7 @@ from typing import Any
 
 import pytest
 import pytest_asyncio
+from httpx import AsyncClient
 from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession  # noqa
 
@@ -14,6 +15,7 @@ from app.config import settings
 from app.database import Base, async_session_maker, engine
 from app.hotels.models import Hotel
 from app.hotels.rooms.models import Room
+from app.main import app as fastapi_app
 from app.users.models import User
 
 
@@ -42,6 +44,19 @@ def event_loop():
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
+
+
+@pytest_asyncio.fixture(scope="function")
+async def get_async_client():
+    async with AsyncClient(app=fastapi_app, base_url="http://test") as async_client:
+        yield async_client
+
+
+@pytest_asyncio.fixture(scope="function")
+async def get_db_session():
+    """todo: возможно не пригодится"""
+    async with async_session_maker() as session:
+        yield session
 
 
 def open_mock_json(model: str) -> list[dict[str, Any]] | dict[str, Any]:
