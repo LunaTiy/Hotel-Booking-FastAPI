@@ -33,7 +33,8 @@ async def get_user_bookings(user: User) -> list[SchemaUserBooking]:
 
 
 async def try_remove_booking(booking_id: int, user: User) -> None:
-    booking: Booking = await BookingRepository.find_one_or_none(Booking.id == booking_id, Booking.user_id == user.id)
+    booking = await BookingRepository.find_one_or_none(Booking.id == booking_id, Booking.user_id == user.id)
     if not booking:
         raise CantRemoveBooking
+
     await BookingRepository.remove(Booking.id == booking_id)

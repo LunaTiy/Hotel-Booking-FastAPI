@@ -2,9 +2,9 @@
 
 from sqlalchemy import delete, insert, select, update
 
-from app.database import async_session_maker
+from app.database import async_session_maker, Base
 
-T = TypeVar("T")
+T = TypeVar("T", bound=Base)
 
 
 class BaseRepository(Generic[T]):
