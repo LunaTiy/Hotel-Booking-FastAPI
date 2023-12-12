@@ -3,5 +3,6 @@
 /.idea/
 /hotel_booking_fastapi.egg-info/
 .env*
+!.env.example
 
 .pdm-python
