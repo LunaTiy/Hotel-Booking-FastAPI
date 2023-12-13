@@ -1,4 +1,5 @@
 import json
+from collections.abc import AsyncGenerator
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -6,7 +7,7 @@ from typing import Any
 import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy import insert
-from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession  # noqa
+from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession  # noqa: F401
 
 from app.bookings.models import Booking
 from app.config import settings
@@ -36,25 +37,14 @@ async def prepare_database() -> None:
         await session.commit()
 
 
-# @pytest.fixture(scope="session")
-# def event_loop():
-#     """
-#     Create an instance of the default event loop for each test case
-#     TODO: may be remove
-#     """
-#     loop = asyncio.get_event_loop_policy().new_event_loop()
-#     yield loop
-#     loop.close()
-
-
 @pytest_asyncio.fixture(scope="function")
-async def async_client():
+async def async_client() -> AsyncGenerator[None, AsyncClient]:
     async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
         yield client
 
 
 @pytest_asyncio.fixture(scope="function")
-async def async_db_session():
+async def async_db_session() -> AsyncGenerator[None, AsyncSession]:
     """todo: возможно не пригодится"""
     async with async_session_maker() as session:
         yield session

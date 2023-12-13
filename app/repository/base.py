@@ -2,7 +2,7 @@
 
 from sqlalchemy import delete, insert, select, update
 
-from app.database import async_session_maker, Base
+from app.database import Base, async_session_maker
 
 T = TypeVar("T", bound=Base)
 

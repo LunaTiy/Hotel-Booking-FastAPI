@@ -4,7 +4,7 @@ from pydantic import EmailStr
 
 
 @pytest.mark.parametrize(
-    "email, password, status_code",
+    ("email", "password", "status_code"),
     [
         ("kot@pes.com", "kotopes", 200),
         ("kot@pes.com", "kot0pes", 409),
@@ -17,7 +17,7 @@ async def test_register_user(
         password: str,
         status_code: int,
         async_client: AsyncClient
-):
+) -> None:
     response = await async_client.post("/auth/register", json={
         "email": email,
         "password": password,
