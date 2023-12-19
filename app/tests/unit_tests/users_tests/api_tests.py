@@ -24,3 +24,26 @@ async def test_register_user(
     })
 
     assert response.status_code == status_code
+
+
+@pytest.mark.parametrize(
+    ("email", "password", "status_code"),
+    [
+        ("test@test.com", "test", 200),
+        ("daniil@example.com", "artem", 200),
+        ("some_test", "test", 422),
+        ("not_known@example.com", "artem", 401),
+    ]
+)
+async def test_login_user(
+        email: EmailStr,
+        password: str,
+        status_code: int,
+        async_client: AsyncClient
+) -> None:
+    response = await async_client.post("/auth/login", json={
+        "email": email,
+        "password": password,
+    })
+
+    assert response.status_code == status_code

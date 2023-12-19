@@ -1,8 +1,7 @@
 import json
-from collections.abc import AsyncGenerator
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, AsyncIterator
 
 import pytest_asyncio
 from httpx import AsyncClient
@@ -22,9 +21,9 @@ from app.users.models import User
 async def prepare_database() -> None:
     assert settings.mode == "TEST"
 
-    async with engine.begin() as conn:  # type: AsyncConnection
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
+    async with engine.begin() as connection:  # type: AsyncConnection
+        await connection.run_sync(Base.metadata.drop_all)
+        await connection.run_sync(Base.metadata.create_all)
 
     bookings, hotels, rooms, users = await read_and_process_data()
 
@@ -38,13 +37,13 @@ async def prepare_database() -> None:
 
 
 @pytest_asyncio.fixture(scope="function")
-async def async_client() -> AsyncGenerator[None, AsyncClient]:
+async def async_client() -> AsyncIterator[AsyncClient]:
     async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
         yield client
 
 
 @pytest_asyncio.fixture(scope="function")
-async def async_db_session() -> AsyncGenerator[None, AsyncSession]:
+async def async_db_session() -> AsyncIterator[AsyncSession]:
     """todo: возможно не пригодится"""
     async with async_session_maker() as session:
         yield session
