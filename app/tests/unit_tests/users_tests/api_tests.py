@@ -31,8 +31,8 @@ async def test_register_user(
     [
         ("test@test.com", "test", 200),
         ("daniil@example.com", "artem", 200),
-        ("some_test", "test", 422),
         ("not_known@example.com", "artem", 401),
+        ("some_test", "test", 422),
     ]
 )
 async def test_login_user(

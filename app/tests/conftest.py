@@ -1,7 +1,8 @@
 import json
+from collections.abc import AsyncIterator
 from datetime import datetime
 from pathlib import Path
-from typing import Any, AsyncIterator
+from typing import Any
 
 import pytest_asyncio
 from httpx import AsyncClient
