@@ -17,25 +17,27 @@ router = APIRouter(
 )
 
 
-@router.get("")
+@router.get("/")
 async def get_bookings(
         user: Annotated[User, Depends(get_current_user)]
 ) -> list[SchemaUserBooking]:
     return await get_user_bookings(user)
 
 
-@router.post("/add")
+@router.post("/add", status_code=status.HTTP_201_CREATED)
 async def add_booking(
-        room_id: int, date_from: date, date_to: date,
+        room_id: int,
+        date_from: date,
+        date_to: date,
         user: Annotated[User, Depends(get_current_user)]
 ) -> SchemaBooking:
     booking = await BookingRepository.add(user.id, room_id, date_from, date_to)
-    booking_dict = SchemaBooking.model_validate(booking).model_dump()
-
-    send_booking_confirmation_email.delay(booking_dict, user.email)
 
     if not booking:
         raise RoomCantBeBooked
+
+    booking_dict = SchemaBooking.model_validate(booking).model_dump()
+    send_booking_confirmation_email.delay(booking_dict, user.email)
 
     return booking
 
