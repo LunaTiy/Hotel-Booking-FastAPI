@@ -47,33 +47,15 @@ ignore = [
     "ANN101",
     "ANN102",
     "PYI041"
-
 ]
 
 fixable = ["ALL"]
 unfixable = []
 
 exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
     "venv",
     "migrations"
 ]
+
+[extend-per-file-ignores]
+"app/tests/*" = ["S101"]
