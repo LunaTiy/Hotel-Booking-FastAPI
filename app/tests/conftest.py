@@ -44,10 +44,16 @@ async def async_client() -> AsyncIterator[AsyncClient]:
 
 
 @pytest_asyncio.fixture(scope="function")
-async def async_db_session() -> AsyncIterator[AsyncSession]:
-    """todo: возможно не пригодится"""
-    async with async_session_maker() as session:
-        yield session
+async def authenticated_async_client() -> AsyncIterator[AsyncClient]:
+    """todo: make session scope (not working in pytest-asyncio==0.23.2"""
+    async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
+        await client.post("/auth/login", json={
+            "email": "test@test.com",
+            "password": "test"
+        })
+
+        assert client.cookies["booking_access_token"]
+        yield client
 
 
 def open_mock_json(model: str) -> list[dict[str, Any]] | dict[str, Any]:
