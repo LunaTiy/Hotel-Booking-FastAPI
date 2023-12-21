@@ -46,3 +46,13 @@ class RoomCantBeBooked(BookingException):
 class CantRemoveBooking(BookingException):
     status = status.HTTP_403_FORBIDDEN
     detail = "Невозможно удалить данное бронирование"
+
+
+class IncorrectDataFormat(BookingException):
+    status = status.HTTP_400_BAD_REQUEST
+    detail = "Неверный диапазон дат"
+
+
+class IncorrectDataFormatDiapason(BookingException):
+    status = status.HTTP_400_BAD_REQUEST
+    detail = "Диапазон дат не должен превышать 30 дней"
