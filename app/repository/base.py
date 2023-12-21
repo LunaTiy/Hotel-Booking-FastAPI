@@ -1,6 +1,6 @@
 ﻿from typing import Any, Generic, TypeVar
 
-from sqlalchemy import delete, insert, select, update
+from sqlalchemy import delete, insert, select, update, ColumnElement
 
 from app.database import Base, async_session_maker
 
@@ -18,14 +18,14 @@ class BaseRepository(Generic[T]):
             await session.commit()
 
     @classmethod
-    async def remove(cls, *filter_by: list[bool]) -> None:
+    async def remove(cls, *filter_by: ColumnElement[bool]) -> None:
         async with async_session_maker() as session:
             query = delete(cls.model).filter(*filter_by)
             await session.execute(query)
             await session.commit()
 
     @classmethod
-    async def update(cls, *filter_by: list[bool], **data: dict[str, Any]) -> list[T]:
+    async def update(cls, *filter_by: ColumnElement[bool], **data: dict[str, Any]) -> list[T]:
         async with async_session_maker() as session:
             query = update(cls.model).filter(*filter_by).values(**data).returning(
                 cls.model.__table__.columns)
@@ -34,14 +34,14 @@ class BaseRepository(Generic[T]):
             return result.mappings().all()
 
     @classmethod
-    async def find_one_or_none(cls, *filter_by: list[bool]) -> T | None:
+    async def find_one_or_none(cls, *filter_by: ColumnElement[bool]) -> T | None:
         async with async_session_maker() as session:
             query = select(cls.model.__table__.columns).filter(*filter_by)
             result = await session.execute(query)
             return result.mappings().one_or_none()
 
     @classmethod
-    async def find_all(cls, *filter_by: list[bool]) -> list[T]:
+    async def find_all(cls, *filter_by: ColumnElement[bool]) -> list[T]:
         async with async_session_maker() as session:
             query = select(cls.model.__table__.columns).filter(*filter_by)
             result = await session.execute(query)
