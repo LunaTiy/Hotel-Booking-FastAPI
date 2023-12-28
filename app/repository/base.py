@@ -1,6 +1,6 @@
 ﻿from typing import Any, Generic, TypeVar
 
-from sqlalchemy import delete, insert, select, update, ColumnElement
+from sqlalchemy import ColumnElement, delete, insert, select, update
 
 from app.database import Base, async_session_maker
 
