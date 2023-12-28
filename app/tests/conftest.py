@@ -45,7 +45,7 @@ async def async_client() -> AsyncIterator[AsyncClient]:
 
 @pytest_asyncio.fixture(scope="function")
 async def authenticated_async_client() -> AsyncIterator[AsyncClient]:
-    """todo: make session scope (not working in pytest-asyncio==0.23.2"""
+    """todo: make session scope (not working in pytest-asyncio==0.23.2)"""
     async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
         await client.post("/auth/login", json={
             "email": "test@test.com",
