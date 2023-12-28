@@ -2,7 +2,6 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Query
-from fastapi_cache.decorator import cache
 
 from app.exceptions import IncorrectDataFormat, IncorrectDataFormatDiapason
 from app.hotels.models import Hotel
@@ -17,7 +16,7 @@ router = APIRouter(
 
 
 @router.get("/{location}")
-@cache(expire=20)
+# @cache(expire=20)
 async def get_hotels_by_location_and_time(
         location: str,
         date_from: Annotated[date, Query(description=f"Например, {datetime.now().date()}")],
