@@ -15,6 +15,7 @@ class SchemaBooking(BaseModel):
 
 
 class SchemaUserBooking(BaseModel):
+    booking_id: int
     room_id: int
     user_id: int
     date_from: date

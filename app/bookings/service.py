@@ -15,6 +15,7 @@ async def get_user_bookings(user: User) -> list[SchemaUserBooking]:
         room: Room = await RoomRepository.find_one_or_none(Room.id == booking.room_id)
         user_bookings.append(
             SchemaUserBooking(
+                booking_id=booking.id,
                 room_id=booking.room_id,
                 user_id=user.id,
                 date_from=booking.date_from,
