@@ -1,5 +1,6 @@
 ﻿import pytest
 from httpx import AsyncClient
+from starlette import status
 
 
 @pytest.mark.parametrize(
@@ -35,3 +36,22 @@ async def test_add_and_get_booking(
 
     response = await authenticated_async_client.get("/bookings/")
     assert len(response.json()) == booked_rooms
+
+
+async def test_get_and_delete_all_bookings(
+        authenticated_async_client: AsyncClient
+) -> None:
+    response = await authenticated_async_client.get("/bookings/")
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.json()) != 0
+
+    bookings = response.json()
+
+    for booking in bookings:
+        booking_id = booking["booking_id"]
+        delete_response = await authenticated_async_client.delete(f"/bookings/{booking_id}")
+        assert delete_response.status_code == status.HTTP_204_NO_CONTENT
+
+    response = await authenticated_async_client.get("/bookings/")
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.json()) == 0
