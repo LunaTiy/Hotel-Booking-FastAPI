@@ -22,6 +22,8 @@ async def get_hotels_by_location_and_time(
         date_from: Annotated[date, Query(description=f"Например, {datetime.now().date()}")],
         date_to: Annotated[date, Query(description=f"Например, {datetime.now().date()}")]
 ) -> list[SchemaAvailableHotel]:
+    """todo: need to fix cache bugs in pytest"""
+
     if date_from > date_to:
         raise IncorrectDataFormat
 
