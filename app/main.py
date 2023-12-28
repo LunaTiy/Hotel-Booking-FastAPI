@@ -25,7 +25,7 @@ async def lifespan(
         application: FastAPI  # noqa: ARG001
 ) -> AbstractAsyncContextManager[None]:
     redis = aioredis.from_url(settings.redis_url, encoding="utf8", decode_responses=True)
-    FastAPICache.init(RedisBackend(redis), prefix="my-cache")
+    FastAPICache.init(RedisBackend(redis), prefix="hotel-booking")
     yield
 
 
