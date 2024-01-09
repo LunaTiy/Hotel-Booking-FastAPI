@@ -1,10 +1,12 @@
 ﻿from datetime import date
 
 from sqlalchemy import func, insert, select
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.bookings.models import Booking
 from app.database import async_session_maker
 from app.hotels.rooms.models import Room
+from app.logger import logger
 from app.repository.base import BaseRepository
 
 
@@ -13,10 +15,10 @@ class BookingRepository(BaseRepository[Booking]):
 
     @classmethod
     async def get_count_available_rooms(
-        cls,
-        room_id: int,
-        date_from: date,
-        date_to: date
+            cls,
+            room_id: int,
+            date_from: date,
+            date_to: date
     ) -> int:
         booked_rooms = (
             select(cls.model)
@@ -46,11 +48,11 @@ class BookingRepository(BaseRepository[Booking]):
 
     @classmethod
     async def add(
-        cls,
-        user_id: int,
-        room_id: int,
-        date_from: date,
-        date_to: date
+            cls,
+            user_id: int,
+            room_id: int,
+            date_from: date,
+            date_to: date
     ) -> model | None:
         """
         -- Заезд '2023-05-15'
@@ -68,28 +70,43 @@ class BookingRepository(BaseRepository[Booking]):
         WHERE rooms.id = 1
         GROUP BY rooms.quantity, booked_rooms.room_id
         """
-        rooms_left = await cls.get_count_available_rooms(room_id, date_from, date_to)
-        if rooms_left <= 0:
-            return None
+        try:
+            rooms_left = await cls.get_count_available_rooms(room_id, date_from, date_to)
+            if rooms_left <= 0:
+                return None
 
-        async with async_session_maker() as session:
-            get_price = select(Room.price).filter(Room.id == room_id)
-            price = await session.execute(get_price)
+            async with async_session_maker() as session:
+                get_price = select(Room.price).filter(Room.id == room_id)
+                price = await session.execute(get_price)
 
-            current_price: int = price.mappings().one().price
+                current_price: int = price.mappings().one().price
 
-            add_booking = (
-                insert(cls.model)
-                .values(
-                    room_id=room_id,
-                    user_id=user_id,
-                    date_from=date_from,
-                    date_to=date_to,
-                    price=current_price,
+                add_booking = (
+                    insert(cls.model)
+                    .values(
+                        room_id=room_id,
+                        user_id=user_id,
+                        date_from=date_from,
+                        date_to=date_to,
+                        price=current_price,
+                    )
+                    .returning(Booking.__table__.columns)
                 )
-                .returning(Booking.__table__.columns)
-            )
 
-            new_booking = await session.execute(add_booking)
-            await session.commit()
-            return new_booking.mappings().one()
+                new_booking = await session.execute(add_booking)
+                await session.commit()
+                return new_booking.mappings().one()
+        except (SQLAlchemyError, Exception) as e:
+            if isinstance(e, SQLAlchemyError):
+                msg = "Database Exception: Can't add booking"
+            else:
+                msg = "Unknown Exception: Can't add booking"
+
+            extra = {
+                "user_id": user_id,
+                "room_id": room_id,
+                "date_from": date_from,
+                "date_to": date_to,
+            }
+
+            logger.error(msg, extra=extra, exc_info=True)
