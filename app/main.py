@@ -1,4 +1,7 @@
-﻿from contextlib import AbstractAsyncContextManager, asynccontextmanager
+﻿import time
+from collections.abc import Callable
+from contextlib import AbstractAsyncContextManager, asynccontextmanager
+from typing import AsyncIterator, Coroutine, Generator, Awaitable
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,6 +10,8 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 from sqladmin import Admin
+from starlette.requests import Request
+from starlette.responses import Response
 
 from app.admin.auth import authentication_backend
 from app.admin.views import BookingAdmin, HotelAdmin, RoomAdmin, UserAdmin
@@ -16,6 +21,7 @@ from app.database import engine
 from app.hotels.rooms.router import router as rooms_router
 from app.hotels.router import router as hotels_router
 from app.images.router import router as images_router
+from app.logger import logger
 from app.pages.router import router as pages_router
 from app.users.router import router as users_router
 
@@ -60,3 +66,20 @@ admin.add_view(UserAdmin)
 admin.add_view(HotelAdmin)
 admin.add_view(RoomAdmin)
 admin.add_view(BookingAdmin)
+
+
+@app.middleware("http")
+async def add_process_time_header(
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+
+    logger.info("Request execution time", extra={
+        "process_time": round(process_time, 4)
+    })
+
+    return response
