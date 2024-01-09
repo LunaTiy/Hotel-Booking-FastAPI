@@ -8,6 +8,7 @@ from sqlalchemy import NullPool
 
 class Settings(BaseSettings):
     mode: Literal["DEV", "TEST", "PROD"]
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"]
 
     smtp_host: str
     smtp_port: int
