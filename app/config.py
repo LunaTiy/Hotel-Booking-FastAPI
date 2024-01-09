@@ -2,6 +2,7 @@
 from typing import Literal
 
 from pydantic import PostgresDsn, RedisDsn
+from pydantic_core import Url
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import NullPool
 
@@ -14,6 +15,8 @@ class Settings(BaseSettings):
     smtp_port: int
     smtp_user: str
     smtp_pass: str
+
+    sentry_dsn: Url
 
     redis_host: str
     redis_port: int

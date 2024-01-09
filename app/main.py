@@ -1,8 +1,8 @@
 ﻿import time
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
-from typing import AsyncIterator, Coroutine, Generator, Awaitable
 
+import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -36,6 +36,23 @@ async def lifespan(
 
 
 app = FastAPI(lifespan=lifespan)
+
+sentry_sdk.init(
+    dsn=settings.sentry_dsn,
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
+
+
+@app.get("/sentry-debug")
+async def trigger_error() -> None:
+    division_by_zero = 1 / 0  # noqa: F841
+
 
 app.mount("/static", StaticFiles(directory="app/static"), "static")
 
