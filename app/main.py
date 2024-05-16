@@ -4,6 +4,7 @@ from collections.abc import Awaitable, Callable
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 
 import sentry_sdk
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -102,3 +103,6 @@ async def add_process_time_header(
     })
 
     return response
+
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", reload=True)
