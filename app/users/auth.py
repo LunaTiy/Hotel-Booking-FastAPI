@@ -1,4 +1,4 @@
-﻿from datetime import datetime, timedelta
+﻿import datetime
 from typing import Any
 
 from jose import jwt
@@ -22,7 +22,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(data: dict[str, Any]) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=30)
+    expire = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=30)
     to_encode.update({"exp": expire})
     encoded_jwt: str = jwt.encode(to_encode, settings.secret_key, settings.secret_algo)
     return encoded_jwt

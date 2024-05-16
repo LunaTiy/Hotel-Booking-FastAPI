@@ -37,13 +37,13 @@ async def prepare_database() -> None:
         await session.commit()
 
 
-@pytest_asyncio.fixture(scope="function")
+@pytest_asyncio.fixture(scope="session")
 async def async_client() -> AsyncIterator[AsyncClient]:
     async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
         yield client
 
 
-@pytest_asyncio.fixture(scope="function")
+@pytest_asyncio.fixture(scope="session")
 async def authenticated_async_client() -> AsyncIterator[AsyncClient]:
     """todo: make session scope (not working in pytest-asyncio==0.23.2)"""
     async with AsyncClient(app=fastapi_app, base_url="http://test") as client:

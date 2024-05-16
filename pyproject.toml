@@ -1,55 +1,48 @@
-[project]
-name = "Hotel-Booking-FastAPI"
+[tool.poetry]
+name = "hotel-booking-fastapi"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "Daniil Savushkin", email = "savushkin.d@dev-system.ru"},
-]
-dependencies = [
-    "fastapi>=0.104.1",
-    "uvicorn>=0.24.0.post1",
-    "fastapi-cache2>=0.2.1",
-    "redis>=5.0.1",
-    "sqladmin>=0.16.0",
-    "pydantic-settings>=2.1.0",
-    "python-jose>=3.3.0",
-    "passlib>=1.7.4",
-    "asyncpg>=0.29.0",
-    "itsdangerous>=2.1.2",
-    "Pillow>=10.1.0",
-    "celery>=5.3.5",
-    "flower>=2.0.1",
-    "email-validator>=2.1.0.post1",
-    "bcrypt>=4.0.1",
-    "alembic>=1.12.1",
-    "setuptools>=69.0.2",
-    "python-json-logger>=2.0.7",
-    "sentry-sdk[fastapi]>=1.39.1",
-    "greenlet>=3.0.3",
-]
-requires-python = ">=3.11"
+authors = ["Daniil Savushkin <savushkin.d@dev-system.ru>"]
 readme = "README.md"
-license = {text = "MIT"}
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+alembic = "^1.13.1"
+sqlalchemy = "^2.0.30"
+pydantic-settings = "^2.2.1"
+httpx = "^0.27.0"
+sqladmin = "^0.17.0"
+python-jose = "^3.3.0"
+passlib = "^1.7.4"
+asyncpg = "^0.29.0"
+pillow = "^10.3.0"
+celery = "^5.4.0"
+flower = "^2.0.1"
+email-validator = "^2.1.1"
+bcrypt = "^4.1.3"
+python-json-logger = "^2.0.7"
+sentry-sdk = {extras = ["fastapi"], version = "^2.2.0"}
+fastapi-cache2 = {extras = ["redis"], version = "^0.2.1"}
+itsdangerous = "^2.2.0"
+greenlet = "^3.0.3"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.4.4"
+pytest = "^8.2.0"
+black = "^24.4.2"
+flake8 = "^7.0.0"
+autoflake = "^2.3.1"
+isort = "^5.13.2"
+pyright = "^1.1.363"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.0"
+pytest-asyncio = "^0.23.6"
+pytest-xdist = "^3.6.1"
 
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
-
-[tool.pdm.dev-dependencies]
-test = [
-    "pytest>=7.4.3",
-    "pytest-asyncio>=0.23.2",
-    "pytest-xdist>=3.5.0",
-    "httpx>=0.25.2",
-]
-lint = [
-    "ruff>=0.1.7",
-    "black>=23.12.1",
-    "flake8>=7.0.0",
-    "autoflake>=2.2.1",
-    "isort>=5.13.2",
-    "pyright>=1.1.344",
-]
-
-[tool.pyright]
-include = ["app"]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,5 +1,5 @@
-﻿import logging
-from datetime import datetime
+﻿import datetime
+import logging
 from logging import LogRecord
 from typing import Any
 
@@ -16,7 +16,7 @@ class CustomJsonFormatter(jsonlogger.JsonFormatter):
         super().add_fields(log_record, record, message_dict)
 
         if not log_record.get("timestamp"):
-            now = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            now = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
             log_record["timestamp"] = now
 
         if log_record.get("level"):
